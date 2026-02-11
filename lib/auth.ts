@@ -1,5 +1,7 @@
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import { prisma } from "@/lib/db";
 
 const allowedDomains = new Set([
   "gmail.com",
@@ -10,7 +12,8 @@ const allowedDomains = new Set([
 ]);
 
 export const authOptions: NextAuthOptions = {
-  session: { strategy: "jwt" },
+  adapter: PrismaAdapter(prisma),
+  session: { strategy: "database" },
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID ?? "",

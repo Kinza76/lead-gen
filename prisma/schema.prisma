@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = env("DATABASE_PROVIDER")
   url      = env("DATABASE_URL")
 }
 
@@ -22,47 +22,47 @@ model User {
 }
 
 model Lead {
-  id           String     @id @default(cuid())
-  userId       String
-  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  niche        String
-  subNiche     String
-  businessName String
-  ownerName    String?
-  email        String?
-  phone        String?
-  website      String?
-  address      String?
-  source       String
-  status       LeadStatus @default(NEW)
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
-  emailLogs    EmailLog[]
-}
-
-model Template {
-  id        String   @id @default(cuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  name      String
-  subject   String
-  body      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model EmailLog {
   id         String      @id @default(cuid())
   userId     String
   user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  leadId     String
-  lead       Lead        @relation(fields: [leadId], references: [id], onDelete: Cascade)
-  templateId String?
-  status     EmailStatus @default(QUEUED)
-  resendId   String?
-  sentAt     DateTime?
-  replyAt    DateTime?
+  niche      String
+  subNiche   String
+  businessName String
+  ownerName  String?
+  email      String?
+  phone      String?
+  website    String?
+  address    String?
+  source     String
+  status     LeadStatus  @default(NEW)
   createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  emailLogs  EmailLog[]
+}
+
+model Template {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name        String
+  subject     String
+  body        String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model EmailLog {
+  id          String      @id @default(cuid())
+  userId      String
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  leadId      String
+  lead        Lead        @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  templateId  String?
+  status      EmailStatus @default(QUEUED)
+  resendId    String?
+  sentAt      DateTime?
+  replyAt     DateTime?
+  createdAt   DateTime    @default(now())
 }
 
 enum LeadStatus {
@@ -79,18 +79,18 @@ enum EmailStatus {
 }
 
 model Account {
-  id                String  @id @default(cuid())
-  userId            String
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String?
-  access_token      String?
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String?
-  session_state     String?
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?
+  access_token       String?
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?
+  session_state      String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
