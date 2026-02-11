@@ -4,14 +4,15 @@
   "private": true,
   "scripts": {
     "dev": "npm run clean && prisma generate && next dev -H 127.0.0.1 -p 3000",
-    "prebuild": "prisma generate",
+    "prebuild": "npm run verify:ui-types && prisma generate",
     "build": "next build",
     "prestart": "prisma generate",
     "start": "next start -H 127.0.0.1 -p 3000",
     "lint": "next lint",
     "prisma:generate": "prisma generate",
     "clean": "node -e \"try{require('fs').rmSync('.next',{recursive:true,force:true})}catch(e){}\"",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "verify:ui-types": "node scripts/verify-no-prisma-client-in-ui.js"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",

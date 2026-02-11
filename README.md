@@ -41,8 +41,11 @@ Then open:
 
 ## Why this works
 
-- `predev`, `prebuild`, and `prestart` force Prisma Client generation before Next.js executes routes.
+- `build`/`start` pre-hooks plus the inline `dev` script force Prisma Client generation before Next.js executes routes.
 - `clean` removes stale `.next` output so old compiled files (that still reference `new PrismaClient(...)` at import time) cannot keep crashing runtime.
 
 
 If the stack trace still points to `export const prisma = globalForPrisma.prisma ?? new PrismaClient(...)`, your local branch is running older code. Pull latest commits, then run the recovery sequence above.
+
+
+Build now runs `npm run verify:ui-types` to block accidental `@prisma/client` imports in UI pages/components (the exact issue that breaks Vercel builds).
