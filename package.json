@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "predev": "prisma generate",
+    "predev": "npm run clean && prisma generate",
     "dev": "next dev -H 127.0.0.1 -p 3000",
     "prebuild": "prisma generate",
     "build": "next build",
@@ -11,7 +11,7 @@
     "start": "next start -H 127.0.0.1 -p 3000",
     "lint": "next lint",
     "prisma:generate": "prisma generate",
-    "clean": "rm -rf .next",
+    "clean": "node -e \"try{require('fs').rmSync('.next',{recursive:true,force:true})}catch(e){}\"",
     "postinstall": "prisma generate"
   },
   "dependencies": {

@@ -29,6 +29,7 @@ Run the exact sequence below:
 git pull --rebase
 npm install
 npm run clean
+# clean is cross-platform (Windows/macOS/Linux)
 npm run prisma:generate
 npx prisma db push
 npm run dev
