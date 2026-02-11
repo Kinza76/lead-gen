@@ -15,6 +15,8 @@ model User {
   templates    Template[]
   leads        Lead[]
   emailLogs    EmailLog[]
+  subscriptions Subscription[]
+  paymentMethods PaymentMethod[]
   accounts     Account[]
   sessions     Session[]
   createdAt    DateTime   @default(now())
@@ -99,4 +101,28 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+
+model Subscription {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan      String   @default("Free")
+  status    String   @default("active")
+  renewsAt  DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PaymentMethod {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  brand     String
+  last4     String
+  expMonth  Int
+  expYear   Int
+  isDefault Boolean  @default(true)
+  createdAt DateTime @default(now())
 }
