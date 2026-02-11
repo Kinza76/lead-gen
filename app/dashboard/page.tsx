@@ -1,25 +1,22 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Lead, Template } from "@prisma/client";
 import LeadForm from "@/components/LeadForm";
 import LeadTable from "@/components/LeadTable";
 import EmailTemplates from "@/components/EmailTemplates";
+import { LeadView, TemplateView } from "@/lib/types";
 
-const defaultTemplates: Template[] = [
+const defaultTemplates: TemplateView[] = [
   {
     id: "default-intro",
-    userId: "",
     name: "Intro Offer",
     subject: "Quick growth idea for {{businessName}}",
-    body: "Hi {{ownerName}},\n\nI noticed {{businessName}} in {{niche}} and wanted to share a quick growth plan. If you're open, book here: {{calendly}}",
-    createdAt: new Date(),
-    updatedAt: new Date()
+    body: "Hi {{ownerName}},\n\nI noticed {{businessName}} in {{niche}} and wanted to share a quick growth plan. If you're open, book here: {{calendly}}"
   }
 ];
 
 export default function DashboardPage() {
-  const [leads, setLeads] = useState<Lead[]>([]);
+  const [leads, setLeads] = useState<LeadView[]>([]);
   const [selectedLeadId, setSelectedLeadId] = useState<string | undefined>();
   const [nicheFilter, setNicheFilter] = useState("");
   const [subNicheFilter, setSubNicheFilter] = useState("");
@@ -31,7 +28,7 @@ export default function DashboardPage() {
     const response = await fetch(`/api/leads?${params.toString()}`);
     if (!response.ok) return;
     const data = await response.json();
-    setLeads(data.leads ?? []);
+    setLeads((data.leads ?? []) as LeadView[]);
   };
 
   useEffect(() => {

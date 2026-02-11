@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { getPrismaClient } from "@/lib/db";
-import { resend } from "@/lib/resend";
+import { getResendClient } from "@/lib/resend";
 
 const DAILY_LIMIT = 15;
 
@@ -56,6 +56,7 @@ export async function POST(request: Request) {
 
   const html = `${applyTemplate(template.body, replacements)}<hr /><p>You received this email as part of B2B outreach.</p><p><a href="https://example.com/unsubscribe?email=${encodeURIComponent(lead.email)}">Unsubscribe</a></p>`;
 
+  const resend = getResendClient();
   const sent = await resend.emails.send({
     from: "LeadGen+ <outreach@resend.dev>",
     to: [lead.email],

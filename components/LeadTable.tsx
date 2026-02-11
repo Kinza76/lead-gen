@@ -1,7 +1,7 @@
-import { Lead } from "@prisma/client";
+import { LeadView } from "@/lib/types";
 
 type Props = {
-  leads: Lead[];
+  leads: LeadView[];
 };
 
 export default function LeadTable({ leads }: Props) {
