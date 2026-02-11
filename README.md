@@ -26,6 +26,7 @@
 Run the exact sequence below:
 
 ```bash
+git pull --rebase
 npm install
 npm run clean
 npm run prisma:generate
@@ -41,3 +42,6 @@ Then open:
 
 - `predev`, `prebuild`, and `prestart` force Prisma Client generation before Next.js executes routes.
 - `clean` removes stale `.next` output so old compiled files (that still reference `new PrismaClient(...)` at import time) cannot keep crashing runtime.
+
+
+If the stack trace still points to `export const prisma = globalForPrisma.prisma ?? new PrismaClient(...)`, your local branch is running older code. Pull latest commits, then run the recovery sequence above.

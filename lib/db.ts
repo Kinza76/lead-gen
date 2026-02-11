@@ -28,3 +28,15 @@ export function getPrismaClient() {
 
   return globalForPrisma.prisma as any;
 }
+
+// Backward-compatible export for any stale imports (`import { prisma } from "@/lib/db"`).
+// This avoids constructing Prisma at module-evaluation time.
+export const prisma = new Proxy(
+  {},
+  {
+    get(_target, prop) {
+      const client = getPrismaClient();
+      return Reflect.get(client as object, prop);
+    }
+  }
+) as any;
