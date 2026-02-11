@@ -1,22 +1,28 @@
-import { PrismaClient } from "@prisma/client";
+import type { PrismaClient } from "@prisma/client";
 
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
 
-function createPrismaClient() {
+function buildClient(): PrismaClient {
   try {
-    return new PrismaClient({
-      log: ["error", "warn"]
-    });
+    // Lazy require avoids crashing module evaluation when Prisma Client was not generated yet.
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const { PrismaClient: PrismaClientCtor } = require("@prisma/client") as {
+      PrismaClient: new (args?: { log?: Array<"error" | "warn" | "query" | "info"> }) => PrismaClient;
+    };
+
+    return new PrismaClientCtor({ log: ["error", "warn"] });
   } catch (error) {
     throw new Error(
-      'Prisma Client failed to initialize. Run "npm run prisma:generate" (or "npm install") and restart the dev server.',
+      'Prisma Client is not ready. Run "npm install" then "npm run prisma:generate" and restart the dev server.',
       { cause: error }
     );
   }
 }
 
-export const prisma = globalForPrisma.prisma ?? createPrismaClient();
+export function getPrismaClient(): PrismaClient {
+  if (!globalForPrisma.prisma) {
+    globalForPrisma.prisma = buildClient();
+  }
 
-if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = prisma;
+  return globalForPrisma.prisma;
 }
