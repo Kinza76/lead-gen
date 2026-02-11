@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { getPrismaClient } from "@/lib/db";
 import { getResendClient } from "@/lib/resend";
+import { ensureUserByEmail } from "@/lib/user";
 
 const DAILY_LIMIT = 15;
 
@@ -18,8 +19,11 @@ export async function POST(request: Request) {
   if (!session?.user?.email) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const prisma = getPrismaClient();
-  const user = await prisma.user.findUnique({ where: { email: session.user.email } });
-  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const user = await ensureUserByEmail({
+    email: session.user.email,
+    name: session.user.name,
+    image: session.user.image
+  });
 
   const now = new Date();
   const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());

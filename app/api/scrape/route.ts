@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { getPrismaClient } from "@/lib/db";
+import { ensureUserByEmail } from "@/lib/user";
 import { appendLeadToSheet } from "@/lib/sheets";
 import { scrapeLeads } from "@/lib/scraper";
 
@@ -25,8 +26,11 @@ export async function POST(request: Request) {
   if (!session?.user?.email) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const prisma = getPrismaClient();
-  const user = await prisma.user.findUnique({ where: { email: session.user.email } });
-  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const user = await ensureUserByEmail({
+    email: session.user.email,
+    name: session.user.name,
+    image: session.user.image
+  });
 
   if (!limitByMinute(user.id)) {
     return NextResponse.json({ error: "Rate limit exceeded" }, { status: 429 });
