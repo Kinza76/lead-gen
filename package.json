@@ -3,8 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "predev": "npm run clean && prisma generate",
-    "dev": "next dev -H 127.0.0.1 -p 3000",
+    "dev": "npm run clean && prisma generate && next dev -H 127.0.0.1 -p 3000",
     "prebuild": "prisma generate",
     "build": "next build",
     "prestart": "prisma generate",

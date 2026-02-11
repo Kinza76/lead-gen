@@ -19,7 +19,7 @@
    npm run dev
    ```
 
-`npm run dev` now always runs `prisma generate` first via `predev`.
+`npm run dev` now always runs clean + `prisma generate` before starting Next.js (works even if npm pre-scripts are bypassed).
 
 ## Fix for `@prisma/client did not initialize yet`
 
